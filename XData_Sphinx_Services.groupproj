@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{67FD7FCF-50A6-4F11-9F0E-A6374E5932F4}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="XDataService.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SphinxService.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="SphinxManager.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VclClient.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="XDataService">
+        <MSBuild Projects="XDataService.dproj"/>
+    </Target>
+    <Target Name="XDataService:Clean">
+        <MSBuild Projects="XDataService.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="XDataService:Make">
+        <MSBuild Projects="XDataService.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SphinxService">
+        <MSBuild Projects="SphinxService.dproj"/>
+    </Target>
+    <Target Name="SphinxService:Clean">
+        <MSBuild Projects="SphinxService.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SphinxService:Make">
+        <MSBuild Projects="SphinxService.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="SphinxManager">
+        <MSBuild Projects="SphinxManager.dproj"/>
+    </Target>
+    <Target Name="SphinxManager:Clean">
+        <MSBuild Projects="SphinxManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="SphinxManager:Make">
+        <MSBuild Projects="SphinxManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VclClient">
+        <MSBuild Projects="VclClient.dproj"/>
+    </Target>
+    <Target Name="VclClient:Clean">
+        <MSBuild Projects="VclClient.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VclClient:Make">
+        <MSBuild Projects="VclClient.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="XDataService;SphinxService;SphinxManager;VclClient"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="XDataService:Clean;SphinxService:Clean;SphinxManager:Clean;VclClient:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="XDataService:Make;SphinxService:Make;SphinxManager:Make;VclClient:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

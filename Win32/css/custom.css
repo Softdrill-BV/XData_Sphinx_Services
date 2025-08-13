@@ -1,0 +1,35 @@
+body.my-login-page {
+    background-color: #383838;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 14px;
+}
+
+#divLogo img {
+    height: 200px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #f0652c;
+    border-color: #f0652c;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #f0652c;
+    border-color: #383838;
+}
+
+.form-control {
+    border-color: #f0652c;
+}
+
+.form-control:focus {
+    background-color: #f3dbb3;
+    border-color: #f0652c;
+    box-shadow: 0 0 3px 2px rgba(240,101,44,.20);
+}
+
+.form-control::placeholder {
+    border-color: #f0652c;
+}
