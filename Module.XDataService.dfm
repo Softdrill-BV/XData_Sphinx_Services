@@ -1,4 +1,5 @@
 object modXDataService: TmodXDataService
+  OnCreate = ServiceCreate
   DisplayName = 'XDataService'
   OnPause = ServicePause
   OnStart = ServiceStart

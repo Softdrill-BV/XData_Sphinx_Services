@@ -42,7 +42,7 @@ procedure TmodSphinxService.ServiceCreate(Sender: TObject);
 begin
   // Set up logging to text file
   TMSLogger.RegisterManagedOutputHandler(TTMSLoggerTextOutputHandler.Create(TPath.GetDirectoryName(ParamStr(0)) +
-    '\SD_Sphinx_Log.txt'));
+    '\Sphinx_Log.txt'));
   TMSLogger.ExceptionHandling := true;
   TMSLogger.Outputs := [loTimeStamp, loLogLevel, loValue];
 end;
@@ -50,6 +50,7 @@ end;
 procedure TmodSphinxService.ServicePause(Sender: TService; var Paused: Boolean);
 begin
   modServerContainer.SparkleHttpSysDispatcher.Stop;
+  TMSLogger.Info('Dispatcher paused');
 end;
 
 procedure TmodSphinxService.ServiceStart(Sender: TService; var Started: Boolean);
@@ -60,7 +61,7 @@ begin
     modServerContainer.SparkleHttpSysDispatcher.Start;
   except
     on E: System.SysUtils.Exception do
-      TMSLogger.Exception('Dispatcher start error: ' + E.Message);
+      TMSLogger.Error('Dispatcher start error: ' + E.Message);
   end;
 end;
 

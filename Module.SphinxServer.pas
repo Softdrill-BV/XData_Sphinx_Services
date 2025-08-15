@@ -45,7 +45,7 @@ implementation
 uses System.IOUtils, IniFiles, Entities.SphinxUserEx, Sparkle.HttpSys.Config;
 
 const
-  // Arbitrary value to identify the encryption key. Same constant used in XData Server...
+  // Arbitrary value to identify the encryption key. Same constant must be used in the XData Server...
   MY_KEYID = 'EE899E1F-305E-4D0C-B2D2-1F9CF13665F1';
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -62,9 +62,9 @@ begin
   LConfig := THttpSysServerConfig.Create;
   try
     try
+      // Set BaseUrl and ensure it's reserved (i.e. no need to use TMSHttpConfig utility
       SphinxServer.BaseUrl := LIniFile.ReadString('Server', 'BaseURL', 'http://+:2001/example/sphinx');
       TMSLogger.Info('Server base URL set to: ' + SphinxServer.BaseUrl);
-
       if not LConfig.IsUrlReserved(SphinxServer.BaseUrl) then
       begin
         LConfig.ReserveUrl(SphinxServer.BaseUrl, [TSidType.CurrentUser, TSidType.NetworkService]);
@@ -79,6 +79,10 @@ begin
       SphinxConfig.UserOptions.RequireUniquePhoneNumber := LIniFile.ReadBool('SphinxConfig', 'PhoneUnique', true);
       SphinxConfig.LoginOptions.RequireConfirmedPhoneNumber :=
         LIniFile.ReadBool('SphinxConfig', 'PhoneConfirmation', true);
+
+      SphinxConfig.LoginOptions.UseEmail := LIniFile.ReadBool('SphinxConfig', 'AllowUserName', true);
+      SphinxConfig.LoginOptions.UseUserName := LIniFile.ReadBool('SphinxConfig', 'AllowEmailAddress', true);
+      SphinxConfig.LoginOptions.UsePhoneNumber := LIniFile.ReadBool('SphinxConfig', 'AllowPhoneNumber', false);
 
       SphinxConfig.LoginOptions.RequireTwoFactor := LIniFile.ReadBool('SphinxConfig', 'TwoFactorAll', false);
       TMSLogger.Info('SphinxServer.Require2FA set to ' + BoolToStr(SphinxConfig.LoginOptions.RequireTwoFactor));
@@ -150,7 +154,7 @@ begin
     ConfigureClients;
   except
     on E: Exception do
-      TMSLogger.Exception('DataModuleCreate error: ' + E.Message);
+      TMSLogger.Error('DataModuleCreate error: ' + E.Message);
   end;
   TMSLogger.Info('Exit: DataModuleCreate');
 end;
@@ -158,8 +162,8 @@ end;
 procedure TmodServerContainer.DataModuleDestroy(Sender: TObject);
 begin
   TMSLogger.Info('Enter: DataModuleDestroy');
-//  if assigned(FMailer) then
-//    FMailer.Free;
+  // if assigned(FMailer) then
+  // FMailer.Free;
   TMSLogger.Info('Exit: DataModuleDestroy');
 end;
 
@@ -178,7 +182,7 @@ begin
   // TMSLogger.Info('Server configured from ini. Starting HttpSysDispatcher.');
   // end;
   // except
-  // TMSLogger.Exception('Start HttpSysDispatcher - Error reading ini file.');
+  // TMSLogger.Error('Start HttpSysDispatcher - Error reading ini file.');
   // end;
 end;
 
@@ -191,6 +195,7 @@ begin
   // See unit Entities.Example for use of EntityAuthorizeScopes attribute for this purpose
   // *******************************************************************************************************
   Args.Token.Claims.AddOrSet('scope', TSphinxUserEx(Args.User).Access_Level);
+  TMSLogger.Info('Issued token for: ' + TSphinxUserEx(Args.User).UserName.Value);
   TMSLogger.Info('Added claim''scope'' to JWT token with value: ' + TSphinxUserEx(Args.User).Access_Level);
 end;
 
@@ -203,9 +208,9 @@ begin
   // User logged in for first time.  Send token to confirm email address (if required by SphinxConfig)
   // *******************************************************************************************************
   TMSLogger.Info('Sending email confirmation token to: ' + Args.User.Email.ValueOrDefault);
-//  if not assigned(FMailer) then
-//    FMailer := TSphinxMailer.Create;
-//  LResponse := FMailer.SendEmailConfirmationToken(Args.User.Email.ValueOrDefault, Args.Token);
+  // if not assigned(FMailer) then
+  // FMailer := TSphinxMailer.Create;
+  // LResponse := FMailer.SendEmailConfirmationToken(Args.User.Email.ValueOrDefault, Args.Token);
   TMSLogger.Info('Result: ' + LResponse);
 end;
 
@@ -231,14 +236,19 @@ begin
   // *******************************************************************************************************
   // Use PRIVATE key (asymmetric) to sign JWT (JWT token is issued "under the hood" by Sphinx)
   // This identifies the key sent.  Use public key to identify the key is correct (must "match" private key)
+  // Use GENERATE_KEYS.bat script to generate the required key files in the application directory
   // Private key may NOT be published (i.e. must remain on server only)!!!!
   // *******************************************************************************************************
   Args.Data.Algorithm := 'RS256'; // Asymmetric
   Args.Data.KeyId := MY_KEYID;
 
-  LPrivateKeyFile := TPath.GetDirectoryName(ParamStr(0)) + '\my-private.key';
-  Args.Data.Key := TFile.ReadAllBytes(LPrivateKeyFile);
-  TMSLogger.Info('Signed token with private key');
+  try
+    LPrivateKeyFile := TPath.GetDirectoryName(ParamStr(0)) + '\my-private.key';
+    Args.Data.Key := TFile.ReadAllBytes(LPrivateKeyFile);
+    TMSLogger.Info('Signed token with private key');
+  except
+    TMSLogger.Error('Error reading/applying private key file : ' + LPrivateKeyFile);
+  end;
 end;
 
 end.

@@ -8,7 +8,7 @@ uses
   System.Generics.Collections, XData.Client, Entities.Example, Sphinx.Login, Sparkle.Http.Engine, cxGraphics,
   Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.Buttons, Vcl.DBCtrls, Vcl.Mask,
 
-  Vcl.TMSLogging, Vcl.TMSLoggingMemoOutputHandler;
+  Vcl.TMSLogging, Vcl.TMSLoggingMemoOutputHandler, System.ImageList, Vcl.ImgList;
 
 type
   TfrmVclClient = class(TForm)
@@ -54,6 +54,7 @@ type
     btnLogout: TButton;
     Panel4: TPanel;
     btnClear: TButton;
+    ilVclClient: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnLoginClick(Sender: TObject);

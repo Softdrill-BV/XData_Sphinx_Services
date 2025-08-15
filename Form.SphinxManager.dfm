@@ -2,7 +2,7 @@ object frmManager: TfrmManager
   Left = 0
   Top = 0
   Caption = 'Sphinx Configuration and User Manager'
-  ClientHeight = 396
+  ClientHeight = 427
   ClientWidth = 600
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -25,10 +25,11 @@ object frmManager: TfrmManager
     Left = 0
     Top = 9
     Width = 600
-    Height = 387
+    Height = 418
     ActivePage = tsSettings
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 387
     object tsSettings: TTabSheet
       Caption = 'Sphinx Settings'
       ImageIndex = 1
@@ -54,8 +55,8 @@ object frmManager: TfrmManager
         Caption = 'Phone number : '
       end
       object lblPassword: TLabel
-        Left = 16
-        Top = 191
+        Left = 17
+        Top = 235
         Width = 123
         Height = 15
         Caption = 'Password min. length : '
@@ -68,12 +69,19 @@ object frmManager: TfrmManager
         Caption = 'Server base URL: '
       end
       object Label3: TLabel
-        Left = 16
-        Top = 264
+        Left = 17
+        Top = 296
         Width = 97
         Height = 15
         Caption = 'Login App Folder: '
         Transparent = True
+      end
+      object Label4: TLabel
+        Left = 16
+        Top = 158
+        Width = 68
+        Height = 15
+        Caption = 'Log in with : '
       end
       object cbUsernameRequired: TCheckBox
         Left = 152
@@ -81,6 +89,8 @@ object frmManager: TfrmManager
         Width = 100
         Height = 17
         Caption = 'Required'
+        Checked = True
+        State = cbChecked
         TabOrder = 0
       end
       object cbEmailRequired: TCheckBox
@@ -132,8 +142,8 @@ object frmManager: TfrmManager
         TabOrder = 6
       end
       object sePasswordLength: TSpinEdit
-        Left = 152
-        Top = 188
+        Left = 153
+        Top = 232
         Width = 57
         Height = 24
         MaxValue = 255
@@ -142,8 +152,8 @@ object frmManager: TfrmManager
         Value = 4
       end
       object cbPasswordUpper: TCheckBox
-        Left = 256
-        Top = 191
+        Left = 257
+        Top = 235
         Width = 129
         Height = 17
         Caption = 'Require uppercase'
@@ -152,8 +162,8 @@ object frmManager: TfrmManager
         TabOrder = 8
       end
       object cbPasswordLower: TCheckBox
-        Left = 256
-        Top = 214
+        Left = 257
+        Top = 258
         Width = 121
         Height = 17
         Caption = 'Require lowercase'
@@ -162,8 +172,8 @@ object frmManager: TfrmManager
         TabOrder = 9
       end
       object cbPasswordDigit: TCheckBox
-        Left = 399
-        Top = 191
+        Left = 400
+        Top = 235
         Width = 97
         Height = 17
         Caption = 'Require digit'
@@ -172,8 +182,8 @@ object frmManager: TfrmManager
         TabOrder = 10
       end
       object cbPasswordSpecial: TCheckBox
-        Left = 399
-        Top = 214
+        Left = 400
+        Top = 258
         Width = 169
         Height = 17
         Caption = 'Require special character'
@@ -187,11 +197,11 @@ object frmManager: TfrmManager
         TabOrder = 12
       end
       object cb2FA_All: TCheckBox
-        Left = 152
-        Top = 155
-        Width = 225
+        Left = 153
+        Top = 193
+        Width = 296
         Height = 17
-        Caption = 'Require two factor for ALL users'
+        Caption = 'Require two factor authentication for ALL users'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clRed
         Font.Height = -12
@@ -201,20 +211,44 @@ object frmManager: TfrmManager
         TabOrder = 13
       end
       object edtLoginAppFolder: TEdit
-        Left = 152
-        Top = 261
+        Left = 153
+        Top = 293
         Width = 417
         Height = 23
         TabOrder = 14
       end
       object btnSave: TButton
-        Left = 455
-        Top = 311
+        Left = 456
+        Top = 343
         Width = 113
         Height = 25
         Caption = 'Save configuration'
         TabOrder = 15
         OnClick = btnSaveClick
+      end
+      object cbAllowUserName: TCheckBox
+        Left = 153
+        Top = 158
+        Width = 88
+        Height = 17
+        Caption = 'User name'
+        TabOrder = 16
+      end
+      object cbAllowEmail: TCheckBox
+        Left = 257
+        Top = 158
+        Width = 100
+        Height = 17
+        Caption = 'Email address'
+        TabOrder = 17
+      end
+      object cbAllowPhone: TCheckBox
+        Left = 401
+        Top = 158
+        Width = 112
+        Height = 17
+        Caption = 'Phone number'
+        TabOrder = 18
       end
     end
     object tsUser: TTabSheet

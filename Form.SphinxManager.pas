@@ -8,7 +8,7 @@ uses
 
   Aurelius.Engine.ObjectManager, Aurelius.Drivers.SQLite, Aurelius.Comp.Connection,
 
-//  uSphinxMailer, // Removed from demo.  Please implement your own.
+  // uSphinxMailer, // Removed from demo.  Please implement your own.
 
   Entities.SphinxUserEx;
 
@@ -51,6 +51,10 @@ type
     edtLoginAppFolder: TEdit;
     btnDelete: TButton;
     btnSave: TButton;
+    Label4: TLabel;
+    cbAllowUserName: TCheckBox;
+    cbAllowEmail: TCheckBox;
+    cbAllowPhone: TCheckBox;
     procedure btnCreateUserClick(Sender: TObject);
     procedure btnEditUserClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -58,8 +62,10 @@ type
     procedure PickFindBy(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
-//  strict private
-//    FMailer: TSphinxMailer; // Removed from demo.  Please implement your own.
+    // *******************************************************************************************************
+    // strict private
+    // FMailer: TSphinxMailer; // Removed from demo.  Please implement your own.
+    // *******************************************************************************************************
   private
     { Private declarations }
     FObjMgr: TObjectManager;
@@ -90,11 +96,12 @@ var
   UsrMgr: IUserManager;
   Usr: TSphinxUserEx;
   dlgUser: TdlgSphinxUserEx;
-  LResponse: string;
+  // LResponse: string;
 begin
   if not FindByValueIsValid then
     exit;
 
+  // Ref. https://support.tmssoftware.com/t/create-user-with-aurelius-and-set-initial-password/25703/8)
   CoreOptions := TConfigCoreOptions.Create(SphinxConfig);
   UsrMgr := TUserManager.Create(CoreOptions, FObjMgr, false);
 
@@ -138,10 +145,12 @@ begin
 
       // Set 2FA, if required
       UsrMgr.SetTwoFactorRequired(Usr, dlgUser.TwoFactorRequired);
-
-      // Never set 2FA Enabled for a new user! Setting TRUE will cause QR NOT to show on first log in
-      // Think of 2FA Enabled as "2FA was activated / set up for this user.
+      // *******************************************************************************************************
+      // Do NOT set 2FA Enabled for a new user! Setting to TRUE will cause QR not to show on first log in
+      // Think of 2FA Enabled as "2FA was activated / set up for this user".
+      // Ref. https://support.tmssoftware.com/t/sphinx-mfa-qr-code-not-showing-loginoptions-requiretwofactor-not-honoured/25763/2
       // UsrMgr.SetTwoFactorEnabled(Usr, dlgUser.TwoFactorEnabled);
+      // *******************************************************************************************************
 
       // // Create mail module, if required
       // if not assigned(FMailer) then
@@ -169,7 +178,7 @@ begin
     exit;
 
   CoreOptions := TConfigCoreOptions.Create(SphinxConfig);
-  UsrMgr := TUserManager.Create(CoreOptions, FObjMgr, false);
+  UsrMgr := TUserManager.Create(CoreOptions, FObjMgr, false); // Use object manager managed by form (create/destroy)
   if rbUserName.Checked then
     Usr := UsrMgr.FindByName(edtFind.Text) as TSphinxUserEx
   else
@@ -232,7 +241,7 @@ begin
         UsrMgr.SetTwoFactorRequired(Usr, dlgUser.TwoFactorRequired);
 
         UsrMgr.SetTwoFactorEnabled(Usr, dlgUser.TwoFactorEnabled);
-        if Usr.TwoFactorEnabled then
+        if not Usr.TwoFactorEnabled then
           if UsrMgr.GetAuthenticatorKey(Usr) = '' then
             UsrMgr.ResetAuthenticatorKey(Usr);
 
@@ -290,6 +299,7 @@ begin
   ReadIniFile;
 
   // Object manager for user management via IUserManager
+  // Ref. https://support.tmssoftware.com/t/create-user-with-aurelius-and-set-initial-password/25703/8
   FObjMgr := TObjectManager.Create(acSphinx.CreateConnection, TMappingExplorer.Get('Biz.Sphinx'));
 end;
 
@@ -363,6 +373,10 @@ begin
     cbPhoneUnique.Checked := LIniFile.ReadBool('SphinxConfig', 'PhoneUnique', true);
     cbPhoneConfirmation.Checked := LIniFile.ReadBool('SphinxConfig', 'PhoneConfirmation', true);
 
+    cbAllowUserName.Checked := LIniFile.ReadBool('SphinxConfig', 'AllowUserName', true);
+    cbAllowEmail.Checked := LIniFile.ReadBool('SphinxConfig', 'AllowEmailAddress', true);
+    cbAllowPhone.Checked := LIniFile.ReadBool('SphinxConfig', 'AllowPhoneNumber', false);
+
     cb2FA_All.Checked := LIniFile.ReadBool('SphinxConfig', 'TwoFactorAll', false);
 
     sePasswordLength.Value := LIniFile.ReadInteger('SphinxConfig', 'PasswordLength', 4);
@@ -392,6 +406,10 @@ begin
     LIniFile.WriteBool('SphinxConfig', 'PhoneRequired', cbPhoneRequired.Checked);
     LIniFile.WriteBool('SphinxConfig', 'PhoneUnique', cbPhoneUnique.Checked);
     LIniFile.WriteBool('SphinxConfig', 'PhoneConfirmation', cbPhoneConfirmation.Checked);
+
+    LIniFile.WriteBool('SphinxConfig', 'AllowUserName', cbAllowUserName.Checked);
+    LIniFile.WriteBool('SphinxConfig', 'AllowEmailAddress', cbAllowEmail.Checked);
+    LIniFile.WriteBool('SphinxConfig', 'AllowPhoneNumber', cbAllowPhone.Checked);
 
     LIniFile.WriteBool('SphinxConfig', 'TwoFactorAll', cb2FA_All.Checked);
 
