@@ -262,6 +262,10 @@ begin
       TAureliusDataset(Components[ii]).OnObjectUpdate := ObjectUpdate;
       TAureliusDataset(Components[ii]).OnObjectRemove := ObjectRemove;
 
+      // Ensure the entity is "reset" if changes are not accepted (access rights).
+      // Ref. https://support.tmssoftware.com/t/entity-validation-invalid-value-accepted-in-taureliusdataset/23000/5
+      TAureliusDataset(Components[ii]).RefreshObjectOnCancel := true;
+
       TMSLogger.Info('Set object handlers for dataset: ' + TAureliusDataset(Components[ii]).Name);
     end;
 end;
