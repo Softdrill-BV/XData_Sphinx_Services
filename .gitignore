@@ -91,3 +91,4 @@ modules/
 *.key.pub
 
 
+Win32/VclClient.ini
