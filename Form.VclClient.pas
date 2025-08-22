@@ -211,6 +211,13 @@ begin
   if Info.Profile <> nil then
   begin
     TMSLogger.Info('User ID: ' + Info.Profile.Subject);
+
+    TMSLogger.Info('User name: ' + Info.Profile.PreferredUserName); // Always empty?
+
+    // Do NOT confuse this 'scope' with the client application's scope!
+    // This 'scope' claim is used in entity attributes to determine access level (AuthorizeScope)
+    TMSLogger.Info('Scope: ' + Info.Profile.Source['scope'].AsString);
+
     TMSLogger.Info('Email: ' + Info.Profile.Email);
     TMSLogger.Info('EmailVerified: ' + Info.Profile.EmailVerified.ToString(TUseBoolStrs.True));
   end

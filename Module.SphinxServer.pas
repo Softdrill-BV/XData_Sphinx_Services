@@ -194,6 +194,7 @@ begin
   // Each level has more (cumulative) rights. PowerUser and Admin have access to "secret" entities.
   // See unit Entities.Example for use of EntityAuthorizeScopes attribute for this purpose
   // *******************************************************************************************************
+  Args.Token.Claims.AddOrSet('preferred_username', TSphinxUserEx(Args.User).UserName.Value);
   Args.Token.Claims.AddOrSet('scope', TSphinxUserEx(Args.User).Access_Level);
   TMSLogger.Info('Issued token for: ' + TSphinxUserEx(Args.User).UserName.Value);
   TMSLogger.Info('Added claim''scope'' to JWT token with value: ' + TSphinxUserEx(Args.User).Access_Level);
